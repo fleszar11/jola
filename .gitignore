@@ -1,36 +1,31 @@
-*.py[cod]
+# -*- coding: utf-8 -*-
 
-# C extensions
-*.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-__pycache__
 
-# Installer logs
-pip-log.txt
+from email.mime import multipart, text
 
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
 
-# Translations
-*.mo
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
+#Tworzenie maila
+
+mail = multipart.MIMEMultipart()
+
+html = u'<h1>Nagłówek</h1><p>Treść</p>'
+
+#Tworzenie części html
+
+msg = text.MIMEText(html.encode('UTF-8'), 'html', 'UTF-8')
+
+#Dołączenie treści html do maila
+
+mail.attach(msg)
+
+#Dołączenie Nagłówków
+
+mail['From'] = u'Imię Nazwisko<mail@example.com>'
+
+mail['Subject'] = u'Temat wiadomości'
+
+#Stworzona wiadomość
+
+print mail.as_string()
