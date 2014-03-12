@@ -1,47 +1,37 @@
 jola
 ====
+# -*- coding: utf-8 -*-
 
-import smtplib
-import base64
 
-filename = "/tmp/test.txt"
 
-# Read a file and encode it into base64 format
-fo = open(filename, "rb")
-filecontent = fo.read()
-encodedcontent = base64.b64encode(filecontent)  # base64
+from email.mime import multipart, text
 
-sender = 'webmaster@tutorialpoint.com'
-reciever = 'amrood.admin@gmail.com'
 
-marker = "AUNIQUEMARKER"
 
-body ="""
-This is a test email to send an attachement.
-"""
-# Define the main headers.
-part1 = """From: From Person <me@fromdomain.net>
-To: To Person <amrood.admin@gmail.com>
-Subject: Sending Attachement
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary=%s
---%s
-""" % (marker, marker)
+#Tworzenie maila
 
-# Define the message action
-part2 = """Content-Type: text/plain
-Content-Transfer-Encoding:8bit
+mail = multipart.MIMEMultipart()
 
-%s
---%s
-""" % (body,marker)
+html = u'<h1>Nagłówek</h1><p>Treść</p>'
 
-# Define the attachment section
-part3 = """Content-Type: multipart/mixed; name=\"%s\"
-Content-Transfer-Encoding:base64
-Content-Disposition: attachment; filename=%s
+#Tworzenie części html
 
-%s
+msg = text.MIMEText(html.encode('UTF-8'), 'html', 'UTF-8')
+
+#Dołączenie treści html do maila
+
+mail.attach(msg)
+
+#Dołączenie Nagłówków
+
+mail['From'] = u'Imię Nazwisko<mail@example.com>'
+
+mail['Subject'] = u'Temat wiadomości'
+
+#Stworzona wiadomość
+
+print mail.as_string()
+
 --%s--
 """ %(filename, filename, encodedcontent, marker)
 message = part1 + part2 + part3
